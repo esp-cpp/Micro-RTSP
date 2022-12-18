@@ -2,14 +2,14 @@
 #include <stdio.h>
 #include <time.h>
 
-CRtspSession::CRtspSession(WiFiClient& aClient, CStreamer * aStreamer) : LinkedListElement(aStreamer->getClientsListHead()),
+CRtspSession::CRtspSession(SOCKET& aClient, CStreamer * aStreamer) : LinkedListElement(aStreamer->getClientsListHead()),
  m_Client(aClient),
  m_Streamer(aStreamer)
 {
     printf("Creating RTSP session\n");
     Init();
 
-    m_RtspClient = &m_Client;
+    m_RtspClient = m_Client;
     m_RtspSessionID  = getRandom();         // create a session ID
     m_RtspSessionID |= 0x80000000;
     m_StreamID       = -1;
@@ -290,11 +290,11 @@ void CRtspSession::Handle_RtspDESCRIBE()
     case 0: strcpy(StreamName,"mjpeg/1"); break;
     case 1: strcpy(StreamName,"mjpeg/2"); break;
     };
-    snprintf(URLBuf,sizeof(URLBuf),
+    if (snprintf(URLBuf,sizeof(URLBuf),
              "rtsp://%s/%s",
              m_URLHostPort,
-             StreamName);
-    snprintf(Response,sizeof(Response),
+             StreamName) < 0) return;
+    if (snprintf(Response,sizeof(Response),
              "RTSP/1.0 200 OK\r\nCSeq: %s\r\n"
              "%s\r\n"
              "Content-Base: %s/\r\n"
@@ -305,7 +305,7 @@ void CRtspSession::Handle_RtspDESCRIBE()
              DateHeader(),
              URLBuf,
              (int) strlen(SDPBuf),
-             SDPBuf);
+             SDPBuf) < 0) return;
 
     socketsend(m_RtspClient,Response,strlen(Response));
 }

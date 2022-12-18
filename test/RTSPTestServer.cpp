@@ -10,18 +10,19 @@
 
 void workerThread(SOCKET s)
 {
-    SimStreamer streamer(s, true);                     // our streamer for UDP/TCP based RTP transport
+    SimStreamer streamer(true);                     // our streamer for UDP/TCP based RTP transport
 
     CRtspSession rtsp(s, &streamer);     // our threads RTSP session and state
 
     while (!rtsp.m_stopped)
     {
-        uint32_t timeout = 400;
-        if(!rtsp.handleRequests(timeout)) {
+        uint32_t timeout_ms = 400;
+        if(!rtsp.handleRequests(timeout_ms)) {
             struct timeval now;
             gettimeofday(&now, NULL); // crufty msecish timer
             uint32_t msec = now.tv_sec * 1000 + now.tv_usec / 1000;
-            rtsp.broadcastCurrentFrame(msec);
+            // rtsp.broadcastCurrentFrame(msec);
+            streamer.streamImage(msec);
         }
     }
 }

@@ -17,9 +17,9 @@ typedef uint16_t IPPORT; // on linux use network byte order
 
 #define NULLSOCKET 0
 
-inline void closesocket(SOCKET s) {
-    close(s);
-}
+// inline void closesocket(SOCKET s) {
+//     close(s);
+// }
 
 #define getRandom() rand()
 

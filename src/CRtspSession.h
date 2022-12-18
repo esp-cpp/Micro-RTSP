@@ -22,7 +22,7 @@ enum RTSP_CMD_TYPES
 class CRtspSession : public LinkedListElement
 {
 public:
-    CRtspSession(WiFiClient& aRtspClient, CStreamer * aStreamer);
+    CRtspSession(SOCKET& aRtspClient, CStreamer * aStreamer);
     ~CRtspSession();
 
     RTSP_CMD_TYPES Handle_RtspRequest(char const * aRequest, unsigned aRequestSize);
@@ -57,7 +57,7 @@ private:
 
     // global session state parameters
     int m_RtspSessionID;
-    WiFiClient m_Client;
+    SOCKET m_Client;
     SOCKET m_RtspClient;                                      // RTSP socket of that session
     int m_StreamID;                                           // number of simulated stream of that session
     IPPORT m_ClientRTPPort;                                  // client port for UDP based RTP transport

@@ -1,8 +1,6 @@
-#ifndef OV2640_H_
-#define OV2640_H_
+#pragma once
 
-#include <Arduino.h>
-#include <pgmspace.h>
+#include <cstring>
 #include <stdio.h>
 #include "esp_log.h"
 #include "esp_attr.h"
@@ -40,5 +38,3 @@ private:
 
     camera_fb_t *fb;
 };
-
-#endif //OV2640_H_
